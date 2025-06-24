@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mobile Equipment Barcodes</title>
+  <script src="https://unpkg.com/@bwip-js/browser"></script>
+  <style>
+    body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+    canvas { margin: 10px 0; }
+    .label { font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Mobile Equipment Identification</h1>
+  <div id="barcodes"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const codes = [
+      { label: "SN", value: params.get("sn") },
+      { label: "IMEI1", value: params.get("imei1") },
+      { label: "IMEI2", value: params.get("imei2") }
+    ];
+
+    codes.forEach(({ label, value }) => {
+      if (!value) return;
+      const div = document.createElement('div');
+      div.innerHTML = `<div class="label">${label}: ${value}</div>`;
+      const canvas = document.createElement('canvas');
+      div.appendChild(canvas);
+      document.getElementById('barcodes').appendChild(div);
+
+      bwipjs.toCanvas(canvas, {
+        bcid: 'code128',
+        text: value,
+        scale: 3,
+        includetext: true
+      });
+    });
+  </script>
+</body>
+</html>
